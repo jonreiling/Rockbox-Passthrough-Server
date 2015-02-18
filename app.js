@@ -8,13 +8,21 @@ var currentTrack;
 var currentVolume;
 var currentState;
 
+var ipaddr = process.env.OPENSHIFT_INTERNAL_IP || "127.0.0.1";
+var port = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
+
 app.get('/', function(req, res){
   res.send('');
 });
 
-server.listen(3000, function(){
-	console.log('Express server listening on port ' + app.get('port'));
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 3000
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
+ 
+server.listen(server_port, server_ip_address, function () {
+  console.log( "Listening on " + server_ip_address + ", server_port " + server_port )
 });
+
+
 
 var playerSocket = io
 	.of('rockbox-player')
