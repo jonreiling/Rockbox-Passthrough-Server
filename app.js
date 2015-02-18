@@ -30,7 +30,6 @@ var playerSocket = io
 		
 		console.log( "Player connected" );
 
-
 		socket.on('trackUpdate',function(data) {
 			currentTrack = data;
 			io.of('/rockbox-client').emit('trackUpdate',currentTrack);
@@ -58,16 +57,22 @@ var clientSocket = io
 	.on('connection', function (socket) {
 
 		socket.emit('trackUpdate',currentTrack);
-		socket.emit('volumeUpdate',currentState);
-		socket.emit('stateUpdate',currentVolume);
+		socket.emit('volumeUpdate',currentVolume);
+		socket.emit('stateUpdate',currentState);
 
 		socket.on('pause',function() {
 			io.of('/rockbox-player').emit('pause');
 		});
 
+		socket.on('skip',function() {
+			io.of('/rockbox-player').emit('skip');
+		});
+
 		socket.on('play',function(trackId) {
 			io.of('/rockbox-player').emit('play',trackId);
 		});
+
+
 
 	});
 
