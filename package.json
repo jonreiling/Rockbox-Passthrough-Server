@@ -1,5 +1,5 @@
 {
-  "name": "Rockbox-Server",
+  "name": "Rockbox-Passthrough-Server",
   "version": "0.0.1",
   "private": true,
   "scripts": {
