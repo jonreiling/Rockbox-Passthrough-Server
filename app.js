@@ -8,11 +8,17 @@ var currentTrack;
 var currentVolume;
 var currentState;
 
+var connectedToPlayer = false;
+
 var ipaddr = process.env.OPENSHIFT_INTERNAL_IP || "127.0.0.1";
 var port = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
 
+app.get('/status', function(req, res){
+  res.send({'connected':connectedToPlayer});
+});
+
 app.get('/', function(req, res){
-  res.send('Passthrough test');
+  res.send('');
 });
 
 var server_port = process.env.OPENSHIFT_NODEJS_PORT || 3000
@@ -29,6 +35,7 @@ var playerSocket = io
 	.on('connection', function (socket) {
 		
 		console.log( "Player connected" );
+		connectedToPlayer = true;
 
 		socket.on('trackUpdate',function(data) {
 			currentTrack = data;
@@ -45,12 +52,13 @@ var playerSocket = io
 			io.of('/rockbox-client').emit('volumeUpdate',currentVolume);
 		})
 
-	})
-	.on('disconnect',function() {
-		currentTrack = null;
-		io.of('/rockbox-client').emit('trackUpdate',null);
+		socket.on('disconnect',function() {
+			currentTrack = null;
+			io.of('/rockbox-client').emit('trackUpdate',null);
+			connectedToPlayer = false;
+		});
 
-	});
+	})
 
 var clientSocket = io
 	.of('rockbox-client')
