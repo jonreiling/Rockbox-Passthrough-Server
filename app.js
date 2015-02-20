@@ -10,8 +10,12 @@ var currentState;
 
 var connectedToPlayer = false;
 
-var ipaddr = process.env.OPENSHIFT_INTERNAL_IP || "127.0.0.1";
-var port = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 3000
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
+ 
+server.listen(server_port, server_ip_address, function () {
+  console.log( "Listening on " + server_ip_address + ", server_port " + server_port )
+});
 
 app.get('/status', function(req, res){
   res.send({'connected':connectedToPlayer});
@@ -20,15 +24,6 @@ app.get('/status', function(req, res){
 app.get('/', function(req, res){
   res.send('');
 });
-
-var server_port = process.env.OPENSHIFT_NODEJS_PORT || 3000
-var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
- 
-server.listen(server_port, server_ip_address, function () {
-  console.log( "Listening on " + server_ip_address + ", server_port " + server_port )
-});
-
-
 
 var playerSocket = io
 	.of('rockbox-player')
@@ -80,6 +75,9 @@ var clientSocket = io
 			io.of('/rockbox-player').emit('play',trackId);
 		});
 
+		socket.on('setVolume',function(vol) {
+			io.of('/rockbox-player').emit('setVolume',vol);
+		});
 
 
 	});
