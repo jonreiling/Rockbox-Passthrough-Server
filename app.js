@@ -21,8 +21,22 @@ app.get('/status', function(req, res){
   res.send({'connected':connectedToPlayer});
 });
 
+app.get('/ip', function(req, res){
+  res.send({'ip':server_ip_address});
+});
+
 app.get('/', function(req, res){
   res.send('');
+});
+
+app.get('/api/pause', function(req, res){
+	io.of('/rockbox-player').emit('pause');
+	res.send('');
+});
+
+app.get('/api/skip', function(req, res){
+	io.of('/rockbox-player').emit('skip');
+	res.send('');
 });
 
 var playerSocket = io
