@@ -93,6 +93,9 @@ var clientSocket = io
 			io.of('/rockbox-player').emit('setVolume',vol);
 		});
 
+		socket.on('setRadio',function(onOff) {
+			io.of('/rockbox-player').emit('setRadio',onOff);
+		});
 
 	});
 
