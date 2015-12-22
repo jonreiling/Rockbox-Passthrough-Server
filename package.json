@@ -8,6 +8,7 @@
   "main":"app.js",
   "dependencies": {
     "socket.io":"latest",
+    "request":"latest",
     "express": "3.4.8"
   }
 }
