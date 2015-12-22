@@ -128,6 +128,7 @@ var clientSocket = io
 		socket.emit('trackUpdate',currentTrack);
 		socket.emit('volumeUpdate',currentVolume);
 		socket.emit('stateUpdate',currentState);
+		io.of('/rockbox-client').emit('connectionUpdate',connectedToPlayer);
 
 		socket.on('pause',function() {
 			io.of('/rockbox-player').emit('pause');
