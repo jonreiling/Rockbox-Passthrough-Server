@@ -59,6 +59,15 @@ app.get('/api/fullstatus',function(req,res) {
 	res.send({'state':currentState,'volume':currentVolume,'queue':currentQueue.queue,'connectedToPlayer':connectedToPlayer});
 });
 
+app.get('/api/nowplaying',function(req,res) {
+		
+	if ( currentQueue.queue.length == 0 ) {
+		res.send("Nothing is currently playing");
+	} else {
+		res.send(currentQueue.queue[0].name + " - " + currentQueue.queue[0].artists[0].name);
+	}
+});
+
 var playerSocket = io
 	.of('rockbox-player')
 	.on('connection', function (socket) {
