@@ -8,7 +8,10 @@
   "main":"app.js",
   "dependencies": {
     "socket.io":"latest",
-    "request":"latest",
-    "express": "3.4.8"
+    "express": "latest",
+    "console-stamp":"latest",
+    "spotify-web-api-node":"latest",
+    "node-persist":"latest",
+    "body-parser":"latest"
   }
 }
