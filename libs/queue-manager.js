@@ -62,7 +62,7 @@ QueueManager.prototype.gotoNextTrack = function(callback) {
 		this.emit( 'queueUpdate' );
 
 	} else {
-		callback( {} );
+		if ( callback ) callback( {} );
 	}
 }
 
