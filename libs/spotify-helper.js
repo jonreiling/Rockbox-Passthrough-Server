@@ -5,7 +5,13 @@ var events = require('events');
 var storage = require('node-persist');
 var SpotifyWebApi = require('spotify-web-api-node');
 
-storage.initSync();
+if ( process.env.OPENSHIFT_DATA_DIR ) {
+  console.log('openshift data dir', process.env.OPENSHIFT_DATA_DIR);
+  storage.initSync({'dir':process.env.OPENSHIFT_DATA_DIR});
+
+} else {
+  storage.initSync();
+}
 
 /**
 	Constructor.
