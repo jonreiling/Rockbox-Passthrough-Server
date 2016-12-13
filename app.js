@@ -40,6 +40,7 @@ stateManager.addListener('playStateUpdate',function(newState) {
 
 stateManager.addListener('volumeUpdate',function(newVolume) {
 	socketManager.emitVolumeUpdate();
+	socketManager.playerSetVolume(newVolume);	
 });
 
 stateManager.addListener('connectionUpdate',function(connected) {

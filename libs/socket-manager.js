@@ -43,6 +43,10 @@ SocketManager.prototype.playerSetState = function( newState ) {
 	}	
 }
 
+SocketManager.prototype.playerSetVolume = function( volume ) {
+	this.io.of('/rockbox-player').emit('setVolume',volume);	
+}
+
 SocketManager.prototype.emitQueueUpdate = function() {
 
 	this.io.of('/rockbox-client').emit('queueUpdate',{"queue":this.queueManager.queue});
