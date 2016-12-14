@@ -177,6 +177,16 @@ routerApi.get('/fullstatus',function(req,res) {
 routerApi.get('/nowplaying',function(req,res) {
 
 	if ( queueManager.currentTrack == null ) {
+		sendSuccess(res,{});
+	} else {
+		sendSuccess(res,queueManager.currentTrack);
+	}
+});
+
+
+routerApi.get('/nowplaying/text',function(req,res) {
+
+	if ( queueManager.currentTrack == null ) {
 		sendSuccess(res,"Nothing is currently playing");
 	} else {
 		sendSuccess(res,queueManager.currentTrack.name + " - " + queueManager.currentTrack.artist.name);
