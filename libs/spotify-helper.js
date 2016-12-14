@@ -6,6 +6,7 @@ var storage = require('node-persist');
 var SpotifyWebApi = require('spotify-web-api-node');
 
 if ( process.env.OPENSHIFT_DATA_DIR ) {
+
   console.log('openshift data dir', process.env.OPENSHIFT_DATA_DIR);
   storage.initSync({'dir':process.env.OPENSHIFT_DATA_DIR});
 
@@ -308,8 +309,9 @@ SpotifyHelper.prototype.refreshAccessToken = function(){
       scope.spotifyApi.setAccessToken(data.body['access_token']);
 
       //Refresh every 55 minutes.
+      clearTimeout(scope.refreshTokenIntervalReference);
       scope.refreshTokenIntervalReference = setTimeout(function() {
-		scope.refreshAccessToken();
+		    scope.refreshAccessToken();
       },scope.refreshTokenTimeout);
 
     }, function(err) {
