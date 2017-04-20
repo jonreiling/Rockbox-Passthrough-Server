@@ -264,10 +264,9 @@ routerApi.post('/api-ai/', function(req, res){
 
 	if ( req.body.result.metadata.intentName == "GetCurrentPlaying" ) {
 
-		var currentPlaying =m( queueManager.currentTrack != null ) ? "Nothing is currently playing" : queueManager.currentTrack.name + " - " + queueManager.currentTrack.artist.name;
+		var currentPlaying = ( queueManager.currentTrack != null ) ? "Nothing is currently playing" : queueManager.currentTrack.name + " - " + queueManager.currentTrack.artist.name;
 
-		var response = 
-			{
+		var response = {
 				"speech": currentPlaying,
 				"displayText": currentPlaying,
 				"data": {},
