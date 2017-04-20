@@ -262,6 +262,24 @@ routerApi.post('/api-ai/', function(req, res){
 	console.log( 'hit this.' );
 	console.log(req.body);
 
+	if ( req.body.result.metadata.intentName == "GetCurrentPlaying" ) {
+
+		var currentPlaying =m( queueManager.currentTrack != null ) ? "Nothing is currently playing") : queueManager.currentTrack.name + " - " + queueManager.currentTrack.artist.name;
+
+		var response = 
+			{
+				"speech": currentPlaying,
+				"displayText": currentPlaying,
+				"data": {},
+				"contextOut": [],
+				"source": "Rockbox"
+				}
+
+			console.log( response );
+
+		res.append('Content-type','application/json').send(response);
+	}
+
 });
 
 
