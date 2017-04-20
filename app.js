@@ -67,6 +67,7 @@ server.listen(server_port, server_ip_address, function () {
 var routerApi = express.Router();
 
 routerApi.use(function(req, res, next) {
+	console.log('check');
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -183,7 +184,6 @@ routerApi.get('/nowplaying',function(req,res) {
 	}
 });
 
-
 routerApi.get('/nowplaying/text',function(req,res) {
 
 	if ( queueManager.currentTrack == null ) {
@@ -252,6 +252,17 @@ routerApi.post('/volume', function(req, res){
 	sendSuccess(res, {'volume':stateManager.volume} );
 
 });
+
+// -----------------------------------------------------------------------------
+// API.ai response
+// -----------------------------------------------------------------------------
+
+routerApi.post('/api-ai/', function(req, res){
+
+	console.log(req.body);
+
+});
+
 
 // -----------------------------------------------------------------------------
 // Helper Functions
