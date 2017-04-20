@@ -262,7 +262,24 @@ routerApi.post('/api-ai/', function(req, res){
 	console.log( 'hit this.' );
 	console.log(req.body);
 
-	if ( req.body.result.metadata.intentName == "GetCurrentPlaying" ) {
+	if ( req.body.result.action == "rockbox.play.song" ) {
+
+		spotifyHelper.directSearchTrack( req.body.result.parameters.artist , req.body.result.parameters.song , function(results) {
+
+		var response = {
+				"speech": "Added",
+				"displayText": "Added",
+				"data": {},
+				"contextOut": [],
+				"source": "Rockbox"
+				}
+
+			res.append('Content-type','application/json').send(response);
+
+			sendSuccess(res,results);
+		});
+
+	} else if ( req.body.result.action == 'rockbox.currentlyplaying' ) {
 
 		var currentPlaying = ( queueManager.currentTrack == null ) ? "Nothing is currently playing" : queueManager.currentTrack.name + " - " + queueManager.currentTrack.artist.name;
 
