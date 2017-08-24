@@ -2,6 +2,7 @@ module.exports = SocketManager;
 
 
 var events = require('events');
+var connectedPlayers = 0;
 
 
 /**
@@ -82,6 +83,8 @@ SocketManager.prototype.setPlayerSocket = function() {
 	.of('rockbox-player')
 	.on('connection', function (socket) {
 
+		connectedPlayers ++;
+
 		console.log( "Player connected" );
 
 		scope.stateManager.setConnectedToPlayer(true);
@@ -89,9 +92,15 @@ SocketManager.prototype.setPlayerSocket = function() {
 
 		socket.on('disconnect',function(data) {
 
+			connectedPlayers --;
+
 			console.info('Disconnected from player');
-			scope.stateManager.setConnectedToPlayer(false);
-			scope.queueManager.empty();
+
+			if ( connectedPlayers == 0 ) {
+				scope.stateManager.setConnectedToPlayer(false);
+				scope.queueManager.empty();
+			}
+
 		})		
 
 		socket.on('endOfTrack',function(data) {
