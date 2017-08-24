@@ -59,7 +59,7 @@ stateManager.addListener('connectionUpdate',function(connected) {
 var server_port = process.env.PORT || 5000
 
 server.listen(server_port,  function () {
-  console.log( "Listening on " + server_ip_address + ", server_port " + server_port )
+  console.log( "server_port " + server_port )
 });
 
 
