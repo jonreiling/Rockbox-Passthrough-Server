@@ -80,7 +80,7 @@ SocketManager.prototype.setPlayerSocket = function() {
   var scope = this;
 
   this.playerSocket = this.io
-	.of('rockbox-player')
+	.of('/rockbox-player')
 	.on('connection', function (socket) {
 
 		connectedPlayers ++;
