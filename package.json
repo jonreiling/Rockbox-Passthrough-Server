@@ -12,6 +12,7 @@
     "console-stamp":"latest",
     "spotify-web-api-node":"latest",
     "node-persist":"latest",
-    "body-parser":"latest"
+    "body-parser":"latest",
+    "randomstring": "^1.0.5"
   }
 }
