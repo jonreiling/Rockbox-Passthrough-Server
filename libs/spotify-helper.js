@@ -399,7 +399,7 @@ SpotifyHelper.prototype.swapClientToken = function(req, res, next) {
 
         next();
     });
-});
+};
 
 /**
  * Refresh endpoint
@@ -440,4 +440,4 @@ SpotifyHelper.prototype.refreshClientToken = function(req, res, next) {
 
         next();
     });
-});
+};
