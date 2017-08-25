@@ -4,6 +4,7 @@ module.exports = SpotifyHelper;
 var events = require('events');
 var storage = require('node-persist');
 var SpotifyWebApi = require('spotify-web-api-node');
+var encrpytion = require('./encryption.js');
 
 if ( process.env.OPENSHIFT_DATA_DIR ) {
 
@@ -30,6 +31,10 @@ function SpotifyHelper() {
 	  clientSecret : process.env.CLIENT_SECRET,
 	  redirectUri : process.env.REDIRECT_URI
 	});
+
+  this.authString = new Buffer(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64');
+  this.authorizationHeader = 'Basic ' + this.authString;
+  this.spotifyEndpoint = 'https://accounts.spotify.com/api/token';
 
 	this.init();
 }
@@ -360,3 +365,79 @@ SpotifyHelper.prototype.handleError = function(functionName, err) {
   }
 
 };
+
+/**
+ * Swap endpoint
+ *
+ * Uses an authentication code on req.body to request access and
+ * refresh tokens. Refresh token is encrypted for safe storage.
+ */
+//app.post('/swap', function (req, res, next) {
+SpotifyHelper.prototype.swapClientToken = function(req, res, next) {
+    var formData = {
+            grant_type : 'authorization_code',
+            redirect_uri : process.env.CALLBACK_URI,
+            code : req.body.code
+        },
+        options = {
+            uri : url.parse(this.spotifyEndpoint),
+            headers : {
+                'Authorization' : this.authorizationHeader
+            },
+            form : formData,
+            method : 'POST',
+            json : true
+        };
+
+    request(options, function (error, response, body) {
+        if (response.statusCode === 200) {
+            body.refresh_token = encrpytion.encrypt(body.refresh_token);
+        }
+        
+        res.status(response.statusCode);
+        res.json(body);
+
+        next();
+    });
+});
+
+/**
+ * Refresh endpoint
+ *
+ * Uses the encrypted token on request body to get a new access token.
+ * If spotify returns a new refresh token, this is encrypted and sent
+ * to the client, too.
+ */
+SpotifyHelper.prototype.refreshClientToken = function(req, res, next) {
+//app.post('/refresh', function (req, res, next) {
+    if (!req.body.refresh_token) {
+        res.status(400).json({ error : 'Refresh token is missing from body' });
+        return;
+    }
+
+    var refreshToken = encrpytion.decrypt(req.body.refresh_token),
+        formData = {
+            grant_type : 'refresh_token',
+            refresh_token : refreshToken
+        },
+        options = {
+            uri : url.parse(spotifyEndpoint),
+            headers : {
+                'Authorization' : this.authorizationHeader
+            },
+            form : formData,
+            method : 'POST',
+            json : true
+        };
+
+    request(options, function (error, response, body) {
+        if (response.statusCode === 200 && !!body.refresh_token) {
+            body.refresh_token = encrpytion.encrypt(body.refresh_token);
+        }
+
+        res.status(response.statusCode);
+        res.json(body);
+
+        next();
+    });
+});

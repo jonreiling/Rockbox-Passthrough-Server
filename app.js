@@ -102,6 +102,9 @@ app.get('/callback', function(req, res){
   res.send("");
 });
 
+app.get('/swap', spotifyHelper.swapClientToken );
+app.get('/refresh', spotifyHelper.refreshClientToken );
+
 
 // -----------------------------------------------------------------------------
 // GET Routes
