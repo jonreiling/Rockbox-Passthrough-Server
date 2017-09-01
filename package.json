@@ -5,14 +5,14 @@
   "scripts": {
     "start": "node app.js"
   },
-  "main":"app.js",
+  "main": "app.js",
   "dependencies": {
-    "socket.io":"latest",
+    "body-parser": "latest",
+    "console-stamp": "latest",
     "express": "latest",
-    "console-stamp":"latest",
-    "spotify-web-api-node":"latest",
-    "node-persist":"latest",
-    "body-parser":"latest",
-    "randomstring": "^1.0.5"
+    "randomstring": "^1.0.5",
+    "redis": "^2.8.0",
+    "socket.io": "latest",
+    "spotify-web-api-node": "latest"
   }
 }

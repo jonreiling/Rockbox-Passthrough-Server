@@ -1,19 +1,16 @@
 module.exports = SpotifyHelper;
-
+var redisClient = require('redis').createClient(process.env.REDIS_URL);
 
 var events = require('events');
-var storage = require('node-persist');
+//var storage = require('node-persist');
 var SpotifyWebApi = require('spotify-web-api-node');
 var encrpytion = require('./encryption.js');
 
-if ( process.env.OPENSHIFT_DATA_DIR ) {
 
-  console.log('openshift data dir', process.env.OPENSHIFT_DATA_DIR);
-  storage.initSync({'dir':process.env.OPENSHIFT_DATA_DIR});
+redisClient.on("error", function (err) {
+    console.log("Error " + err);
+});
 
-} else {
-  storage.initSync();
-}
 
 /**
 	Constructor.
@@ -50,7 +47,7 @@ SpotifyHelper.prototype = Object.create(events.EventEmitter.prototype, {
 });
 
 SpotifyHelper.prototype.init = function(){
-	this.spotifyApi.setRefreshToken(storage.getItemSync('refresh_token'));
+	this.spotifyApi.setRefreshToken(redisClient.get('refresh_token'));
 	this.refreshAccessToken();
 };
 
@@ -345,9 +342,9 @@ SpotifyHelper.prototype.handleAuthCallback = function(code) {
       console.log('The access token is ' + data.body['access_token']);
       console.log('The refresh token is ' + data.body['refresh_token']);
 
-      storage.setItem('code',code);
-      storage.setItem('access_token',data.body['access_token']);
-      storage.setItem('refresh_token',data.body['refresh_token']);
+      redisClient.set('code',code);
+      redisClient.set('access_token',data.body['access_token']);
+      redisClient.set('refresh_token',data.body['refresh_token']);
       
       // Set the access token on the API object to use it in later calls
       scope.spotifyApi.setAccessToken(data.body['access_token']);
