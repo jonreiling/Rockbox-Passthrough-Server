@@ -20,7 +20,8 @@ function SpotifyHelper() {
     events.EventEmitter.call(this);
 	
 	this.refreshTokenIntervalReference = undefined;
-	this.refreshTokenTimeout = 1000 * 60 * 55; //Every 55 minutes.
+//	this.refreshTokenTimeout = 1000 * 60 * 55; //Every 55 minutes.
+  this.refreshTokenTimeout = 1000 * 60; //Every 55 minutes.
 
 	// credentials are optional
 	this.spotifyApi = new SpotifyWebApi({
