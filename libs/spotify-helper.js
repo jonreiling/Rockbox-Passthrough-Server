@@ -350,6 +350,12 @@ SpotifyHelper.prototype.handleAuthCallback = function(code) {
       // Set the access token on the API object to use it in later calls
       scope.spotifyApi.setAccessToken(data.body['access_token']);
       scope.spotifyApi.setRefreshToken(data.body['refresh_token']);
+
+      clearTimeout(scope.refreshTokenIntervalReference);
+      scope.refreshTokenIntervalReference = setTimeout(function() {
+        scope.refreshAccessToken();
+      },scope.refreshTokenTimeout);
+      
     }, function(err) {
       console.log('Something went wrong!', err);
     });
