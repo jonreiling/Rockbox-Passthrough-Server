@@ -20,8 +20,8 @@ function SpotifyHelper() {
     events.EventEmitter.call(this);
 	
 	this.refreshTokenIntervalReference = undefined;
-//	this.refreshTokenTimeout = 1000 * 60 * 55; //Every 55 minutes.
-  this.refreshTokenTimeout = 1000 * 60; //Every 55 minutes.
+	this.refreshTokenTimeout = 1000 * 60 * 55; //Every 55 minutes.
+//  this.refreshTokenTimeout = 1000 * 60; //Every 55 minutes.
 
 	// credentials are optional
 	this.spotifyApi = new SpotifyWebApi({
@@ -355,7 +355,7 @@ SpotifyHelper.prototype.handleAuthCallback = function(code) {
       scope.refreshTokenIntervalReference = setTimeout(function() {
         scope.refreshAccessToken();
       },scope.refreshTokenTimeout);
-      
+
     }, function(err) {
       console.log('Something went wrong!', err);
     });
