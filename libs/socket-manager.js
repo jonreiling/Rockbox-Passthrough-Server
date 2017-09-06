@@ -98,7 +98,7 @@ SocketManager.prototype.setPlayerSocket = function() {
 
 			if ( connectedPlayers == 0 ) {
 				scope.stateManager.setConnectedToPlayer(false);
-				scope.queueManager.empty();
+//				scope.queueManager.empty();
 			}
 
 		})		

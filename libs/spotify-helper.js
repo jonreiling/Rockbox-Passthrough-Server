@@ -1,15 +1,11 @@
 module.exports = SpotifyHelper;
-var redisClient = require('redis').createClient(process.env.REDIS_URL);
 
 var events = require('events');
 //var storage = require('node-persist');
 var SpotifyWebApi = require('spotify-web-api-node');
 var encrpytion = require('./encryption.js');
-
-
-redisClient.on("error", function (err) {
-    console.log("Error " + err);
-});
+var pg = require('pg');
+pg.defaults.ssl = true;
 
 
 /**
@@ -34,7 +30,21 @@ function SpotifyHelper() {
   this.authorizationHeader = 'Basic ' + this.authString;
   this.spotifyEndpoint = 'https://accounts.spotify.com/api/token';
 
-	this.init();
+  var scope = this;
+  
+  pg.connect(process.env.DATABASE_URL, function(err, client) {
+    if (err) throw err;
+    console.log('Connected to postgres! Getting schemas...');
+
+    client
+      .query('SELECT table_schema,table_name FROM information_schema.tables;')
+      .on('row', function(row) {
+        console.log(JSON.stringify(row));
+      });
+        scope.init();
+
+  });
+
 }
 
 /**
@@ -48,6 +58,7 @@ SpotifyHelper.prototype = Object.create(events.EventEmitter.prototype, {
 });
 
 SpotifyHelper.prototype.init = function(){
+  console.log('init!');
 	this.spotifyApi.setRefreshToken(redisClient.get('refresh_token'));
 	this.refreshAccessToken();
 };
