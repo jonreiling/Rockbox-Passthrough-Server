@@ -10,8 +10,8 @@
     "body-parser": "latest",
     "console-stamp": "latest",
     "express": "latest",
-    "pg": "7.3.0",
     "randomstring": "^1.0.5",
+    "redis": "^2.8.0",
     "socket.io": "latest",
     "spotify-web-api-node": "latest"
   }
