@@ -59,6 +59,7 @@ SpotifyHelper.prototype = Object.create(events.EventEmitter.prototype, {
 });
 
 SpotifyHelper.prototype.init = function(){
+  console.log('refresh',redis.get('refresh_token'))
 	this.spotifyApi.setRefreshToken(redis.get('refresh_token'));
 	this.refreshAccessToken();
 };
