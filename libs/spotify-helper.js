@@ -59,9 +59,16 @@ SpotifyHelper.prototype = Object.create(events.EventEmitter.prototype, {
 });
 
 SpotifyHelper.prototype.init = function(){
-  console.log('refresh',redis.get('refresh_token'))
-	this.spotifyApi.setRefreshToken(redis.get('refresh_token'));
-	this.refreshAccessToken();
+
+  var scope = this;
+
+  redis.get('refresh_token', function (err, reply) {
+      console.log(reply.toString()); // Will print `OK`
+      scope.spotifyApi.setRefreshToken(reply.toString());
+      scope.refreshAccessToken();
+  });  
+	//this.spotifyApi.setRefreshToken(redis.get('refresh_token'));
+	//this.refreshAccessToken();
 };
 
 SpotifyHelper.prototype.search = function(searchterm,callback) {
