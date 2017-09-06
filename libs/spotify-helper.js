@@ -4,9 +4,24 @@ var events = require('events');
 //var storage = require('node-persist');
 var SpotifyWebApi = require('spotify-web-api-node');
 var encrpytion = require('./encryption.js');
-var pg = require('pg');
-pg.defaults.ssl = true;
 
+
+
+
+if (process.env.REDISTOGO_URL) {
+    // TODO: redistogo connection
+    var rtg   = require("url").parse(process.env.REDISTOGO_URL);
+    var redis = require("redis").createClient(rtg.port, rtg.hostname);
+
+    redis.auth(rtg.auth.split(":")[1]);    
+} else {
+    var redis = require("redis").createClient();
+}
+
+
+redis.on("error", function (err) {
+    console.log("Error " + err);
+});
 
 /**
 	Constructor.
@@ -30,21 +45,7 @@ function SpotifyHelper() {
   this.authorizationHeader = 'Basic ' + this.authString;
   this.spotifyEndpoint = 'https://accounts.spotify.com/api/token';
 
-  var scope = this;
-  
-  pg.connect(process.env.DATABASE_URL, function(err, client) {
-    if (err) throw err;
-    console.log('Connected to postgres! Getting schemas...');
-
-    client
-      .query('SELECT table_schema,table_name FROM information_schema.tables;')
-      .on('row', function(row) {
-        console.log(JSON.stringify(row));
-      });
-        scope.init();
-
-  });
-
+	this.init();
 }
 
 /**
@@ -58,8 +59,7 @@ SpotifyHelper.prototype = Object.create(events.EventEmitter.prototype, {
 });
 
 SpotifyHelper.prototype.init = function(){
-  console.log('init!');
-	this.spotifyApi.setRefreshToken(redisClient.get('refresh_token'));
+	this.spotifyApi.setRefreshToken(redis.get('refresh_token'));
 	this.refreshAccessToken();
 };
 
@@ -354,9 +354,9 @@ SpotifyHelper.prototype.handleAuthCallback = function(code) {
       console.log('The access token is ' + data.body['access_token']);
       console.log('The refresh token is ' + data.body['refresh_token']);
 
-      redisClient.set('code',code);
-      redisClient.set('access_token',data.body['access_token']);
-      redisClient.set('refresh_token',data.body['refresh_token']);
+      redis.set('code',code);
+      redis.set('access_token',data.body['access_token']);
+      redis.set('refresh_token',data.body['refresh_token']);
       
       // Set the access token on the API object to use it in later calls
       scope.spotifyApi.setAccessToken(data.body['access_token']);
